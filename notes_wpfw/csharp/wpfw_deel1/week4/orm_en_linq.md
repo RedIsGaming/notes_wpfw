@@ -6,7 +6,7 @@ Hier vind je de onderdelen van lesweek4. Alles wat je moet weten van deze week w
 
 Als je de concepten begrijpt, dan ben je al een stap vooruit. Voor vragen of opmerkingen kun je me altijden dmen op #Discord: redisgaming of #Whatsapp. Deze intro zal ook in de andere documenten als intro staan, dus al je dit hebt gelezen, kun je de intro H1 skippen. Voor de rest ben ik meer gefocust op voorbeelden dan op het uitleggen. Houdt daar rekening mee. Good luck :)
 
-> Note: De uitleg is in het Nederlands. De code in het Engels.
+> Note: De uitleg is in het Nederlands. De code en H2/H3 in het Engels.
 
 ## #linq
 
@@ -168,7 +168,7 @@ Value: 3, 6, 9, 0
 
 - #SingleOrDefault pakt precies 1 element die aan de voorwaarde voldoet, daarna stopt het programma. Als er geen element is gevonden, dan wordt de default waarde #null of de absolute 0 bij arithmatic datatypes. Ook moet de waarde uniek zijn. Krijg je meer dan 1 resultaat? Dan krijg je hierop een error: Unhandled exception. System.InvalidOperationException: Sequence contains more than one matching element. #FirstOrDefault is in dit geval veel beter om te gebruiken.
 
-> Dit is de lijst die je zeker moet weten. Het zijn er 19/66. Dit staat ook in de slides. Er staat meer in de lesstof zelf, maar aangezien het heel algemeen is omgeschreven, kan het geen kwaad om alles goed door te nemen. Je hoeft niet alles uit je hoofd te weten, als je maar begrijpt hoe het werkt. Alles wat hier staat is volgens het toetsmatrijs. De overige behandel ik hier niet.
+> Dit is de lijst die je zeker moet weten. Het zijn er 19/66. Dit staat ook in de slides. Er staat meer in de lesstof zelf, maar aangezien het heel algemeen is omgeschreven, kan het geen kwaad om alles goed door te nemen. Je hoeft niet alles uit je hoofd te weten, als je maar begrijpt hoe het werkt. Alles wat hier staat is volgens het #toetsmatrijs. De overige behandel ik hier niet.
 
 ```C#
 Aggregate //TSource
@@ -351,6 +351,90 @@ public class Program
 
 Dit wordt later beschreven.
 
-## Explicit, Eager and Lazy Loading
+## Explicit, Eager and Lazy #Loading
 
-Dit wordt nog beschreven.
+#Loading is een proces dat geldt voor de Entity Framework (EF) en de omliggende data in het ORM. Welke #Loading je moet gebruiken en welke sneller is aan de #usecase en wat je ermee wilt bereiken. Hieronder zullen alle verschillende #Loading worden beschreven. Omdat dit een best uitgebreid stuk kan zijn, zullen we de #code uit de docs gebruiken en niet zelf aanmaken.
+
+> Url behorend tot de #code voorbeelden: https://blog.jetbrains.com/dotnet/2023/09/21/eager-lazy-and-explicit-loading-with-entity-framework-core/ en https://dzone.com/articles/working-with-lazy-loading-and-eager-loading-in-ent
+
+### Explicit #Loading
+
+Explicit #Loading is het proces.
+
+## Eager #Loading 
+
+Eager #Loading is het proces waarop je op een query aanroept en daarboven op de gerelateerde gegevens en die ermee laad. Dit kun je doen met de #Include keyword. Eager #Loading is het tegenovergestelde van Lazy #Loading , want je laad meteen alle gegevens in. Dit kan voor een grote overhead zorgen. Hieronder is een voorbeeld hoe je #Loading kunt toepassen.
+
+```C#
+var invoices = db.Invoices
+  .Include(invoice => invoice.InvoiceLines)
+  .ToList();
+
+// All invoices are already loaded...
+foreach (var invoice in invoices)
+{
+  // ...including all their Invoice lines
+  foreach (var invoiceLine in invoice.InvoiceLines)
+  {
+    // ...
+  }
+}
+
+```
+
+> Voor meerdere calls kun je na de #Include erop #ThenInclude gebruiken.
+
+```C#
+using (var context = new AdventureWorksContext())
+{
+  var data = context.Employee
+    .Include(j => j.JobCandidate)
+    .ThenInclude(b => b.BusinessEntity)
+    .ToList();
+}
+
+```
+
+## Lazy #Loading 
+
+Lazy #Loading is het proces waarbij de query automatisch worden geladen wanneer dit nodig is. Alleen de nodige gegevens die je verwacht worden geladen. In tegenstelling tot Eager #Loading is Lazy #Loading veel sneller. Dit komt, omdat je niet expliciet aangeeft dat je hierop ook een call wilt doen. 
+
+```C#
+var invoices = db.Invoices
+  .ToList();
+
+// All invoices are already loaded...
+foreach (var invoice in invoices)
+{
+  // ...invoice lines are queried when accessed...
+  foreach (var invoiceLine in invoice.InvoiceLines)
+  {
+    // ...the related product is also queried when accessed
+    var product = invoiceLine.Product;
+    
+    // ...
+  }
+}
+
+```
+
+Maar het kan ook je #performance naar beneden halen, wanneer je met bepaalde stukken data werkt. Dit is voornamelijk waar voor het serializeren van bepaalde gegevens. Het is mogelijk om Lazy #Loading uit te schakelen. Hieronder is een voorbeeld hoe het werkt en hoe je dit kunt uitzetten.
+
+### Turning off Lazy #Loading
+
+```C#
+public sealed class NorthwindModelOptimized: NorthwindModel
+{
+  public NorthwindModelOptimized()
+  {
+    ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+  	this.ChangeTracker.LazyLoadingEnabled = false; //Turn off Lazy Loading
+  }
+
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
+  {
+   	// Write your implementation here
+  }
+}
+
+```

@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#toetsmatrijs",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -65,8 +65,7 @@
               "state": {}
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -147,15 +146,15 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "42200edc4d6eb134",
+  "active": "9f997fb097ca76a3",
   "lastOpenFiles": [
-    "csharp/wpfw_deel1/week1/csharp.md",
-    "csharp/wpfw_deel1/week4/orm_en_linq.md",
-    "csharp/wpfw_deel1/week7/specflow.md",
     "csharp/wpfw_deel1/week3/async_(en_functioneel)_programmeren.md",
-    "csharp/wpfw_deel1/week6/api.md",
-    "csharp/wpfw_deel1/week5/internet.md",
     "csharp/wpfw_deel1/week2/testen_mocks.md",
+    "csharp/wpfw_deel1/week4/orm_en_linq.md",
+    "csharp/wpfw_deel1/week1/csharp.md",
+    "csharp/wpfw_deel1/week5/internet.md",
+    "csharp/wpfw_deel1/week6/api.md",
+    "csharp/wpfw_deel1/week7/specflow.md",
     "Pasted image 20231209171503.png",
     "Pasted image 20231209171224.png",
     "Pasted image 20231209170921.png",
