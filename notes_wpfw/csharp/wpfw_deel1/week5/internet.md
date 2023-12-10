@@ -5,3 +5,5 @@ Hier vind je de onderdelen van lesweek5. Alles wat je moet weten van deze week w
 Als je de concepten begrijpt, dan ben je al een stap vooruit. Voor vragen of opmerkingen kun je me altijden dmen op #Discord: redisgaming of #Whatsapp. Deze intro zal ook in de andere documenten als intro staan, dus al je dit hebt gelezen, kun je de intro H1 skippen. Voor de rest ben ik meer gefocust op voorbeelden dan op het uitleggen. Houdt daar rekening mee. Good luck :)
 
 > Note: De uitleg is in het Nederlands. De code en H2/H3 in het Engels.
+
+## <span style="color:#FF0000">Waarschijnlijk kom ik hier niet aan toe.</span>
