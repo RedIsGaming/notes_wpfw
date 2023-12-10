@@ -26,50 +26,52 @@ public class DownloadSource
   public async Task DownloadAsync()  
   {  
     Console.WriteLine("Awaiting downloads...");  
-    await Task.Delay(3000);  
+    await Task.Delay(3000); //Delay of 3 seconds. 
     var source = new List<string> { "Downloading from Source" };  
-    var download = Enumerable.Range(0, TOTAL);  
+    var download = Enumerable.Range(0, TOTAL); //Total of 50 elements.  
   
-    foreach (var downloads in download)  
+    foreach (var downloads in download) //Loop through the 50 elements.
     {  
       var result = await Task.Run(() => source  
         .Select((value, number) => new { Value = value, Number = number })
         .OrderBy(d => d.Value)  
         .ToList());  
-        
+
+	  //Print the items from the List in the Console.
       result.ForEach(d =>  
       {  
         Console.WriteLine($"Task: {source[d.Number]} {downloads + 1}...");  
-        Task.Delay(150).Wait();  
+        Task.Delay(150).Wait(); //Wait required with a delay of 0.15 seconds. 
       });  
     }  
   
-    await Task.CompletedTask;  
+    await Task.CompletedTask; //Wait for the Task to complete.  
   }  
   
   public async Task SourceAsync()  
   {  
-    await Task.Delay(1500);  
+    await Task.Delay(1500); //Delay of 1.5 seconds. 
     var process = new List<string> { "Processing data from Source" };  
-    var download = Enumerable.Range(0, TOTAL);  
+    var download = Enumerable.Range(0, TOTAL); //Total of 50 elements.
   
-    foreach (var processes in download)  
+    foreach (var processes in download) //Loop through the 50 elements.
     {  
       var result = await Task.Run(() => process  
         .Select((value, number) => new { Value = value, Number = number})  
         .OrderBy(p => p.Value)  
         .ToList());  
-        
+
+      //Print the items from the List in the Console.
       result.ForEach(p =>  
       {  
-        var random = new Random().Next(1, TOTAL);  
+        var random = new Random().Next(1, TOTAL); //Total random from 1 to 50.
         Console.WriteLine($"Process: {process[p.Number]} {processes + 1} {random}MB / {random}MB...");  
-        Task.Delay(75).Wait();  
+        Task.Delay(75).Wait(); //Wait required with a delay of 0.075 seconds.  
       });  
     }  
       
     Console.WriteLine("All downloads and processes completed!!!");  
-    await Task.CompletedTask;  
+    await Task.CompletedTask; //Wait for the Task to complete.
   }
 }
 
@@ -107,7 +109,7 @@ WhenAny //Task<Task>
 Yield //YieldAwaitable
 ```
 
-> Je hoeft niet alles uit je hoofd te kennen. Waarschijnlijk zul je zelf maar maximaal 3 nodig hebben. Delay, Run en CompletedTask gebruik je het meest. Maar FromResult kan handig zijn als je in een synchroon programma werkt, waarin je niet met async en #await bezig bent.
+> Je hoeft niet alles uit je hoofd te kennen. Waarschijnlijk zul je zelf maar maximaal 3 nodig hebben. Delay, Run en CompletedTask gebruik je het meest. Maar FromResult kan handig zijn als je in een synchroon programma werkt, waarin je niet met async en #await bezig bent. Er zijn meer methods beschikbaar wanneer je deze chaint, zoals bijvoorbeeld Wait.
 
 ### Running Main Program
 
@@ -127,7 +129,7 @@ public class Program
 
 ```
 
-> Hier roepen we de objecten aan. Nadat de downloads klaar zijn, zie je: Awaiting processes... verschijnen. Dit heeft een vertraging van 1,5 seconden.
+> Hier roepen we de objecten aan. Nadat de downloads klaar zijn, zie je: Awaiting processes... verschijnen. Dit heeft een vertraging van 1,5 seconden. Het is mogelijk een locale variabele aan te maken die async heet.
 
 ### Result Async Program
 

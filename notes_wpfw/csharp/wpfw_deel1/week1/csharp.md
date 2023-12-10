@@ -174,7 +174,7 @@ interface IConsumer<in T> //Contravariance, in, low to high, args.
   
 class Producer<T> : IProducer<T> //Covariance, return, no args.  
 {  
-  public T Produce() => default(T);  
+  public T Produce() => default;  
 }  
   
 class Consumer<T> : IConsumer<T> //Contravariance, no return, args.  
@@ -213,6 +213,8 @@ public class Program
 //Call this method in public static void Main() {} for it to work.
 
 ```
+
+> Het volgende resultaat is: This contravariance returns: h.
 
 ## Generics and Generic Type Constraints
 
@@ -294,9 +296,9 @@ public class Program
     };  
   
     var data = new List<Initializer<float>> { initialize }; // For illustration purposes. You can do with the List whatever your want. 
-	var print = $"The following latitude/longtitude are: {initialize.Latitude} and       {initialize.Longtitude}.\n";
-
-	Console.WriteLine(print);
+	var print = $"The following latitude/longtitude are: {initialize.Latitude} and {initialize.Longtitude}.\n";
+	Console.WriteLine(print); 
+	//The following latitude/longtitude are: 6.490459 and 2.640913.
   }
   
   public static void Main() {} //Call method here between {}.
@@ -305,6 +307,8 @@ public class Program
 //Call this method in public static void Main() {} for it to work.
 
 ```
+
+> Resultaat: The following latitude/longtitude are: 6.490459 and 2.640913.
 
 Omdat de eerste variabele het juiste type heeft, kunnen we hiervan een #List initializer van maken. Ook dit gaat tussen de { }. Vervolgens printen we dit op het scherm en krijg je nieuwste waarde terug. Als je de #generics datatype hier aanpast, moeten beide variabelen compatibel zijn, anders moet je een extra #generics type in de #struct zetten: #R. Mag ook anders heten.
 
@@ -319,8 +323,7 @@ Daarnaast moet het return type overeen komen met het type die je in de #class, #
 
 public struct Overloading(uint result)  
 {  
-  public uint Result { get; } = result;  
-    
+  public uint Result { get; } = result;
   public static Overloading operator +(Overloading a, Overloading b) => new(a.Result - b.Result);  
 }
 
@@ -342,7 +345,8 @@ public class Program
     var a = new Overloading(6);  
     var b = new Overloading(2);  
     var c = a + b;  
-    Console.WriteLine($"Result after operator overloading is: {c.Result}.\n");  
+    Console.WriteLine($"Result after operator overloading is: {c.Result}.\n");
+    //Result after operator overloading is: 4. 
   }
 
   public static void Main() {} //Call method here between {}.
@@ -351,6 +355,8 @@ public class Program
 //Call this method in public static void Main() {} for it to work.
 
 ```
+
+> Resultaat: Result after operator overloading is: 4.
 
 Hier maken we een method, waarin we de #operator gaan implementeren. We maken twee impliciete variabelen aan met onze struct #Overloading . Die krijgen het type die we aan hebben gegeven in de #struct , namelijk #uint / #u32. Daarna tellen we die op en tonen we dit in de #Console. Het resultaat is niet 6 + 2 = 8, maar 6 - 2 = 4. Het return type is leidend.
 
@@ -404,18 +410,21 @@ public class Program
 {
   private static void ExtensionMethod()  
   {  
-    const double devil = 333.0;  
-    var extend = devil.Extension(devil); //Extension Method call
-    var overextend = Method.Extension(devil, devil); 
-    Console.WriteLine($"Local variable extends with value: {extend} and overextends   with value: {overextend}.\n");
+    const double DEVIL = 333.0;  
+    var extend = DEVIL.Extension(DEVIL); //Extension Method call
+    var overextend = Method.Extension(DEVIL, DEVIL); 
+    Console.WriteLine($"Local variable extends with value: {extend} and overextends with value: {overextend}."); 
+    //Local variable extends with value: 666 and overextends with value: 666.
   }
-}
 
-public static void Main() {} //Call method here between {}.
+  public static void Main() {} //Call method here between {}.
+}
 
 //Call this method in public static void Main() {} for it to work.
 
 ```
+
+> Resultaat: Local variable extends with value: 666 and overextends with value: 666.
 
 ## Value and Reference Types, Structs
 
@@ -485,10 +494,19 @@ public class Program
   {
     var point = new Point(4, 6);  
     Console.WriteLine($"Point x is: {point.X}.\nPoint y is: {point.Y}.");  
-    Console.WriteLine($"Point x is now: {point.X = 6}.\nPoint y is now: {point.Y = 4}.");  
+    Console.WriteLine($"Point x is now: {point.X = 6}.\nPoint y is now: {point.Y = 4}.");
+    /*Point x is: 4.
+    Point y is 6.
+	Point x is now: 6.
+	Point y is now: 4.*/
   }  
 }
 
 //No seperate method made here. You can directly call this to see the result.
 
 ```
+
+> Resultaat: Point x is: 4.
+> Point y is 6.
+> Point x is now: 6.
+> Point y is now: 4.
