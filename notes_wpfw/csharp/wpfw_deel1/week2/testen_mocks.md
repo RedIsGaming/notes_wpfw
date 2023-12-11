@@ -50,6 +50,12 @@ We maken een #interface ICalculator met een #generics met type #T. Daaraan geven
 
 Nadat we de Mock hebben, maken we een #class / #struct met de daadwerkelijke implementatie. We maken een Calculator en in de #Primary-Constructor geven we de #interface mee met iCalculator argument. Dit is #Dependency-Injection . Je implementeert niet de #interface, maar geeft dit als waarde mee.
 
+> Hier is hoe #Primary-Constructor werkt met #Dependency-Injection :
+
+![[primaryconstructor_dependency.png]]
+
+> url: https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/tutorials/primary-constructors
+
 De MockCalculator die de #interface implementeert is #Dependency-Inversion. Terug naar Calculator. De argument die meegegeven is een #interface-Injection en de #Property een #setter-Injection. Die is #readonly en #private. We willen niet de Mock implementatie aanroepen. Je ziet ook een #generics constraint met where #T : #INumber #T.
 
 Nu is het alleen mogelijk om arithmatic getallen eraan mee te geven. Als laatste hebben we de twee methods die we in de test gaan gebruiken. De implementatie lijkt bijna hetzelfde als de #interface , maar we kunnen de namen van die method voor de => aanpassen. Voor het gemak laten we het zoals het is. #generics types zijn optioneel. Het is geen requirement voor een Mock.

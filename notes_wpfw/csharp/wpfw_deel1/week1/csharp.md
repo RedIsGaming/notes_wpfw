@@ -157,7 +157,9 @@ public class Program
 > The current levels have the following difficulties: Easy. 
 > Just fucking easy!!! and Hard.
 
-## Contra- and Covariance
+## #Contravariance and #Covariance
+
+### #Contravariance and #Covariance Example 1
 
 ```C#
 //namespace ConsoleApp1  
@@ -184,14 +186,20 @@ class Consumer<T> : IConsumer<T> //Contravariance, no return, args.
     Console.WriteLine($"This contravariance returns: {obj}.\n");  
   }  
 }  
-  
-public class Variance {} //This class won't be used for this part.
 
 //Add this classes/interfaces in a seperate file or place it somewhere you like.
 
 ```
 
-Hier komt later wat uitleg.
+Hierboven is de layout voor #contravariantie en #covariantie. Schrik niet. Ik zal precies uitleggen wat het nou eigenlijk is. We maken 2 #interface en #class aan. In IProducer passen we #covariantie toe. Dit geven we expliciet met het keyword #out. Je kunt het zien als argument is uit de method en als return type. #T heeft een return type met waarde #T.
+
+Daarna laten we #class Producer inheriten van IProducer. Beide hebben de #generics waarde van #T. Voor #T returnen we #default. Dit zet alle waardes op #null of de absolute 0 waarde wanneer dit van toepassing is. Dan hebben we een #interface IConsumer. Hier passen we #contravariantie toe. Met het keyword #in maak je #T expliciet #contravariant.
+
+Je ziet dat we geen return type hebben. Wel hebben we een obj argument van type #T. #in is als argument in de method. Dit is van laag naar hoog, #contravariantie is van hoog naar laag. Vervolgens hebben we een #class Consumer met type #T als #generics type. Daarna implementeren we de method met argument obj van type #T. We zetten hier onze #code.
+
+> We zetten daar het volgende in: #Console.WriteLine($"This contravariance returns: {obj}.\n");
+
+### #Contravariance and #Covariance Result
 
 ```C#
 namespace ConsoleApp1;
@@ -214,7 +222,116 @@ public class Program
 
 ```
 
-> Het volgende resultaat is: This contravariance returns: h.
+We roepen het programma aan met de #interface en maken twee objecten aan. Hierboven zie je #Covariance en #Contravariance in actie. Het is duidelijk wat het resultaat is van deze code.
+
+> Het volgende resultaat is: This #contravariance returns: h.
+
+### #Contravariance and #Covariance Example 2
+
+We maken een super simpel programma. 2 #class met eentje genaamd: Base en de andere genaamd: Derived. Deze inherited van Base. Beide #class hebben hun eigen method, die iets uitprinten in de #Console . In Program hebben we ook 2 methods die we gebruiken voor de #Action. In de uitleg in de #code kun je precies zien hoe dit nou eigenlijk te werk gaat.
+
+```C#
+namespace ConsoleApp1; 
+
+public class Base 
+{ 
+  public void PrintBase() 
+  { 
+    Console.WriteLine("Base"); 
+  } 
+} 
+
+public class Derived : Base 
+{ 
+  public void PrintDerived() 
+  { 
+    Console.WriteLine("Derived"); 
+  } 
+} 
+
+public class Program 
+{ 
+  private static void PrintActionBase(Base b) 
+  { 
+    Console.WriteLine("Action Base"); 
+  } 
+  
+  private static void PrintActionDerived(Derived d) 
+  { 
+    Console.WriteLine("Action Derive"); 
+  } 
+  
+  public static void Main() 
+  { 
+    var base1 = new Base(); //Invariant met implicit typing 
+    Derived derived1 = new(); //Invariant met new() object
+    
+    object Base base2 = new Derived(); //Covariant, hoog naar laag 
+    Derived derived2 = new Base(); //Contravariant, laag naar hoog
+      
+    List<Base> base3 = new List<Derived>(); //Covariant, hoog naar laag 
+    List<Derived> derived3 = new List<Base>(); //Contravariant, laag naar hoog
+      
+	IEnumerable<Base> base4 = new List<Derived>(); //Covariant, werkt met een type dat hoger is. //In dit geval de IEnumerable. Interfaces kunnen alleen voor de eerste komen te staan. 
+	IEnumerable<Derived> derived4 = new List<Base>(); //Contravariant, werkt niet met een type dat lager is, je krijgt //hierop een error. Type 'Base' doesn't match expected type 'Derived'. 
+	  
+	Action<Base> base5 = new Action<Derived>(PrintActionDerived); //Covariant, werkt niet met een type dat hoger is. Je krijgt hierop een error.
+	Action<Derived> derived5 = new Action<Base>(PrintActionBase); //Contravariant, werkt met eem type dat lager is. In dit geval de Action. Interfaces kunnen alleen voor de eerste komen te staan.
+  } 
+}
+
+```
+
+> Hierboven staat in het Nederlands uitgelegd, wat #covariantie en #contravariantie nou doen.
+
+### #Contravariance and #Covariance Example 3
+
+Hier zullen we de boven genoemde voorbeelden nog verder verduidelijken. We maken 2 #interface en #class aan en doen daar iets mee. IGalaxy en Planet zijn #covariant. IPlanet en Orbit zijn #contravariant. We zullen met #object en #string werken. Let goed op de keywords: #out en #in. In de #code staat in het Nederlands beschreven hoe dit allemaal te werk gaat.
+
+```C#
+namespace ConsoleApp1;  
+  
+public interface IGalaxy<out T> //Covariance, keyword => out, want type T is uit de argument list.  
+{  
+  public T? Covariance(); //Return type T  
+}  
+  
+public class Planet : IGalaxy<string> //Verander dit van string naar object en het return type ook, wat merk je op?  
+{  
+  public string Covariance() => "Planet"; //Return type  
+}  
+  
+public interface IPlanet<in T> //Contravariance, keyword => in, want type T is in de argument list.  
+{  
+  public void Contravariance(T obj); //Argument type T  
+}  
+  
+public class Orbit : IPlanet<object> //Verander dit van object naar string en het argument type ook, wat merk je op?  
+{  
+  public void Contravariance(object obj) => Console.WriteLine(obj); //Argument type  
+}  
+  
+public class Program  
+{  
+  public static void Main()  
+  {  
+    //Allemaal high to low, maar:
+     
+    IGalaxy<object> galaxy = new Planet(); //Het is covariant, kijk naar de type tussen <>. Ik kan object erin stoppen en  
+    //vervangen met string. Dit werkt, want object is een collectie die de string in zich heeft. Dit werkt.    
+    IGalaxy<string> extraGalaxy = new Planet(); //Invariant type werkt ook.  
+    //IGalaxy<string> g = new Planet(); //Contravariant werkt niet hierop. string kan niet naar object. Zie regel 8/10.    
+    
+    IPlanet<string> planet = new Orbit(); //Het is Contravariant, kijk naar de type tussen <>. Ik kan string erin stoppen  
+    //en vervangen met object. Dit werkt, want string behoort tot een collectie die vanuit object komt. Dit werkt.    
+    IPlanet<object> extraplanet = new Orbit(); //Invariant type werkt ook.  
+    //IPlanet<object> p = new Orbit(); //Covariant werkt niet hierop. object kan niet naar string. Zie regel 18/20.  
+  }
+}
+
+```
+
+> Hierboven staat in het Nederlands uitgelegd, wat #covariantie en #contravariantie nou doen.
 
 ## Generics and Generic Type Constraints
 

@@ -347,23 +347,88 @@ public class Program
 
 ```
 
-## ORM
+## #ORM
 
-Dit wordt later beschreven.
+#ORM staat voor Object Relational Mapping en zorgt ervoor dat je data kan aansturen van en naar Databases. Het maakt de vertaalslag naar queries, zodat je niet dit zelf hoeft te schrijven. Terwijl je focust op de datastructuren, doet het #ORM de rest voor je. Hieronder staat een goeie uitleg van #ChatGPT die in het Engels is geschreven. 
+
+> Het gaat over wat een #ORM precies oplost en tegen welke problemen je kan aanlopen.
+
+**ChatGPT**
+**Object-Relational Mapping (ORM)** is a programming technique that allows data to be seamlessly transferred between an object-oriented system and a relational database system. The main problems that #ORM aims to solve are related to the impedance mismatch between the object-oriented programming paradigm and the relational database model.
+
+### Problems #ORM Solves:
+
+1. **Impedance Mismatch:**
+    
+    - **Problem:** Object-oriented languages (like Java or C#) represent data using objects, while relational databases store data in tables. The differences between these models create an impedance mismatch.
+    - **Solution:** #ORM provides a way to map objects to database tables and vice versa, helping to bridge the gap between the object-oriented and relational worlds.
+2. **Boilerplate Code:**
+    
+    - **Problem:** Manually writing SQL queries and mapping database results to objects can be tedious and error-prone, leading to a lot of boilerplate code.
+    - **Solution:** #ORM tools automate the process of #CRUD (Create, Read, Update, Delete) operations, reducing the amount of boilerplate #code and improving developer productivity.
+3. **Database Abstraction:**
+    
+    - **Problem:** Without #ORM, developers need to write code specific to the database they are using. Switching databases can be challenging.
+    - **Solution:** #ORM abstracts away the underlying database details, making it easier to switch between different database systems without major code changes.
+4. **Maintainability:**
+    
+    - **Problem:** When the data model changes, manual updates to SQL queries and #object mappings are required, making maintenance challenging.
+    - **Solution:** #ORM tools often provide automated schema generation and migration tools, making it easier to adapt to changes in the data model.
+
+### Problems Encountered with #ORM:
+
+1. **Performance Overhead:**
+    
+    - **Issue:** #ORM tools may introduce performance overhead compared to hand-tuned SQL queries, especially for complex or performance-critical applications.
+    - **Mitigation:** #ORM tools often provide ways to optimize queries, and developers can choose to use native SQL queries when necessary.
+2. **Learning Curve:**
+    
+    - **Issue:** There can be a learning curve associated with understanding and effectively using an #ORM, especially for developers new to the tool.
+    - **Mitigation:** Training, documentation, and experience can help developers become proficient with the #ORM tool.
+3. **Customization Limitations:**
+    
+    - **Issue:** Some #ORMs might limit the flexibility to perform highly customized or optimized database operations.
+    - **Mitigation:** Some #ORM tools provide ways to write custom queries or use native SQL when needed, but it depends on the specific #ORM.
+4. **Mapping Complex Relationships:**
+    
+    - **Issue:** Mapping complex relationships between objects and database tables can be challenging and may require additional configuration.
+    - **Mitigation:** #ORMs often provide features and annotations to handle complex relationships, but developers need to be aware of and properly configure these.
+
+While #ORM tools can greatly simplify database interaction in many scenarios, it's important to be aware of their limitations and potential issues. The choice to use an #ORM should be based on the specific requirements and constraints of the project.
 
 ## Explicit, Eager and Lazy #Loading
 
-#Loading is een proces dat geldt voor de Entity Framework (EF) en de omliggende data in het ORM. Welke #Loading je moet gebruiken en welke sneller is aan de #usecase en wat je ermee wilt bereiken. Hieronder zullen alle verschillende #Loading worden beschreven. Omdat dit een best uitgebreid stuk kan zijn, zullen we de #code uit de docs gebruiken en niet zelf aanmaken.
+#Loading is een proces dat geldt voor de Entity Framework (EF) en de omliggende data in het #ORM. Welke #Loading je moet gebruiken en welke sneller is aan de #usecase en wat je ermee wilt bereiken. Hieronder zullen alle verschillende #Loading worden beschreven. Omdat dit een best uitgebreid stuk kan zijn, zullen we de #code uit de docs gebruiken en niet zelf aanmaken.
 
 > Url behorend tot de #code voorbeelden: https://blog.jetbrains.com/dotnet/2023/09/21/eager-lazy-and-explicit-loading-with-entity-framework-core/ en https://dzone.com/articles/working-with-lazy-loading-and-eager-loading-in-ent
 
 ### Explicit #Loading
 
-Explicit #Loading is het proces.
+Explicit #Loading is het proces waar de gegevens worden geladen wanneer je dit specifiek doet. De data wordt alleen opgehaald wanneer dit nodig is. Doe je dit niet? Dan krijg je een lege #collection . Het wordt duidelijk waar de #code voor de query wordt aangeroepen, maar je hebt nog steeds het resultaat + 1 probleem. Hieronder is een voorbeeld van Explicit #Loading .
+
+```C#
+var invoices = db.Invoices
+  .ToList();
+
+// All invoices are already loaded...
+foreach (var invoice in invoices)
+{
+  // ...but you'll have to explicitly load invoice lines when they are needed
+  db.Entry(invoice).Collection(p => p.InvoiceLines).Load();
+
+  foreach (var invoiceLine in invoice.InvoiceLines)
+  {
+    // ...
+  }
+}
+
+```
+
+> Om Explicit #Loading toe te passen, gebruik je het keyword #Load. Zie het voorbeeld hier.
 
 ## Eager #Loading 
 
-Eager #Loading is het proces waarop je op een query aanroept en daarboven op de gerelateerde gegevens en die ermee laad. Dit kun je doen met de #Include keyword. Eager #Loading is het tegenovergestelde van Lazy #Loading , want je laad meteen alle gegevens in. Dit kan voor een grote overhead zorgen. Hieronder is een voorbeeld hoe je #Loading kunt toepassen.
+Eager #Loading is het proces waarop je op een query iets aanroept en daarboven op de gerelateerde gegevens ermee laad. Dit kun je doen met de #Include keyword. Eager #Loading is het niet het tegenovergestelde van Lazy #Loading ,  je laad wel meteen alle gegevens in. Dit kan voor een overhead zorgen. Hieronder is een voorbeeld hoe je #Loading kunt toepassen.
 
 ```C#
 var invoices = db.Invoices
@@ -397,7 +462,7 @@ using (var context = new AdventureWorksContext())
 
 ## Lazy #Loading 
 
-Lazy #Loading is het proces waarbij de query automatisch worden geladen wanneer dit nodig is. Alleen de nodige gegevens die je verwacht worden geladen. In tegenstelling tot Eager #Loading is Lazy #Loading veel sneller. Dit komt, omdat je niet expliciet aangeeft dat je hierop ook een call wilt doen. 
+Lazy #Loading is het proces waarbij de query automatisch worden geladen wanneer dit nodig is. Alleen de nodige gegevens die je verwacht worden geladen. In tegenstelling tot Eager #Loading is Lazy #Loading niet perse veel sneller. Je krijgt het volledige resultaat + 1. In het meeste gevallen is het niet aan te raden om dit te gebruiken. Kijk naar de benaming: Lazy.
 
 ```C#
 var invoices = db.Invoices
@@ -438,3 +503,7 @@ public sealed class NorthwindModelOptimized: NorthwindModel
 }
 
 ```
+
+### Explicit, Eager and Lazy #Loading Video
+
+> Hier een video: https://www.youtube.com/watch?v=T9fTFynqvCw
